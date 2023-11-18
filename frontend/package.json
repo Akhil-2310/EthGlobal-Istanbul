@@ -9,6 +9,7 @@
     "@web3modal/wagmi": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.19.0",
     "react-scripts": "5.0.1",
     "viem": "^1.19.3",
     "wagmi": "^1.4.7",
@@ -26,6 +27,7 @@
       "react-app/jest"
     ]
   },
+  "type": "module",
   "browserslist": {
     "production": [
       ">0.2%",

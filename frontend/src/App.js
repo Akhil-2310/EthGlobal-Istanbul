@@ -1,8 +1,9 @@
-import "./App.css";
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
-
+import { Link } from "react-router-dom";
 import { WagmiConfig } from "wagmi";
 import { arbitrum, mainnet } from "viem/chains";
+import Banner from "./components/Banner.jsx";
+import Proposals from "./components/Proposals.jsx";
 
 const projectId = "3b453e195a53706c5119130c34dd761f";
 const metadata = {
@@ -39,40 +40,26 @@ function App() {
                   />
                 </svg>
               </label>
-              <ul
-                tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-              >
-                <li>
-                  <a>Item 1</a>
-                </li>
-                <li>
-                  <a>Parent</a>
-                  <ul className="p-2">
-                    <li>
-                      <a>Submenu 1</a>
-                    </li>
-                    <li>
-                      <a>Submenu 2</a>
-                    </li>
-                  </ul>
-                </li>
-                <li>
-                  <a>Item 3</a>
-                </li>
-              </ul>
             </div>
-            <a className="btn btn-ghost text-xl">daisyUI</a>
+            <a className="btn btn-ghost text-xl">Merhaba DAO</a>
           </div>
           <div className="navbar-center hidden lg:flex">
             <ul className="menu menu-horizontal px-1">
               <li>
                 <a>Item 1</a>
               </li>
+              <li>
+                <a>Item 2</a>
+              </li>
+              <li>
+                <a>Item 3</a>
+              </li>
             </ul>
+            <w3m-button />
           </div>
-          <w3m-button />
         </div>
+        <Banner />
+        <Proposals />
       </WagmiConfig>
     </>
   );
