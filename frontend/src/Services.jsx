@@ -12,7 +12,7 @@
 
 import { ethers } from "ethers";
 import { getGlobalState } from "./main/main.jsx";
-const contractAddress = "0xea8f77c350e839d545d309233b9477d27ecd187f";
+const contractAddress = "0xB9Ff48899609d76416f4A995A5977115e85291d2";
 const contractAbi = [
   {
     inputs: [],
@@ -815,4 +815,54 @@ const getProposal = async (id) => {
   }
 };
 
-export { getProposal, voteOnProposal, payoutBeneficiary, performContribute };
+const raiseProposal = async ({ title, description, beneficiary, amount }) => {
+  try {
+    // Assuming window.ethereum is available (MetaMask or a similar provider)
+    await window.ethereum.enable();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    const contract = new ethers.Contract(contractAddress, contractAbi, signer);
+
+    amount = ethers.utils.parseEther(amount.toString());
+
+    const connectedAccount = await signer.getAddress();
+
+    await contract.createProposal(title, description, beneficiary, amount, {
+      from: connectedAccount,
+    });
+
+    window.location.reload();
+  } catch (error) {
+    reportError(error);
+    return error;
+  }
+};
+
+const listVoters = async (id) => {
+  try {
+    // Assuming window.ethereum is available (MetaMask or a similar provider)
+    await window.ethereum.enable();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractAbi,
+      provider
+    );
+
+    const votes = await contract.getVotesOf(id);
+    return votes;
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+export {
+  getProposal,
+  voteOnProposal,
+  payoutBeneficiary,
+  performContribute,
+  listVoters,
+  raiseProposal,
+};

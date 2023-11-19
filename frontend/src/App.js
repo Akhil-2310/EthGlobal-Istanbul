@@ -2,6 +2,12 @@ import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
 import { Link, BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { WagmiConfig } from "wagmi";
 import { arbitrum, mainnet } from "viem/chains";
+import {
+  polygonZkEvmTestnet,
+  gnosisChiado,
+  neonDevnet,
+  goerli,
+} from "wagmi/chains";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -19,7 +25,7 @@ const metadata = {
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
-const chains = [mainnet, arbitrum];
+const chains = [mainnet, arbitrum, gnosisChiado];
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 createWeb3Modal({ wagmiConfig, projectId, chains });
 
@@ -751,7 +757,7 @@ const onSuccess = async (result) => {
   const provider = new ethers.providers.Web3Provider(connection);
   const signer = await provider.getSigner();
   const contract = new ethers.Contract(
-    0xea8f77c350e839d545d309233b9477d27ecd187f,
+    0xb9ff48899609d76416f4a995a5977115e85291d2,
     abi,
     signer
   );

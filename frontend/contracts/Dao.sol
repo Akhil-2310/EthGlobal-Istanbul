@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract Dao is ReentrancyGuard, AccessControl {
     bytes32 private immutable CONTRIBUTOR_ROLE = keccak256("CONTRIBUTOR");
     bytes32 private immutable STAKEHOLDER_ROLE = keccak256("STAKEHOLDER");
-    uint256 immutable MIN_STAKEHOLDER_CONTRIBUTION = 1 ether;
+    uint256 immutable MIN_STAKEHOLDER_CONTRIBUTION = 0.1 ether;
     // uint32 immutable MIN_VOTE_DURATION = 1 weeks;
     uint32 immutable MIN_VOTE_DURATION = 5 minutes;
     uint256 totalProposals;
