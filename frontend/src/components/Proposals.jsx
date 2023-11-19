@@ -2,16 +2,48 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Identicon from "react-identicons";
 import { useState } from "react";
-import { truncate, useGlobalState, daysRemaining } from "../store";
+import { truncate, useGlobalState, daysRemaining } from "../main/main.jsx";
+import { payoutBeneficiary } from "../Services.jsx";
+import { toast } from "react-toastify";
 
 const Proposals = () => {
+  const [data] = useGlobalState("proposals");
+  const [proposals, setProposals] = useState(data);
+
+  const getAll = () => setProposals(data);
+
+  const getOpened = () =>
+    setProposals(
+      data.filter(
+        (proposal) => new Date().getTime() < Number(proposal.duration + "000")
+      )
+    );
+
+  const getClosed = () =>
+    setProposals(
+      data.filter(
+        (proposal) => new Date().getTime() > Number(proposal.duration + "000")
+      )
+    );
+
+  const handlePayout = async (id) => {
+    await payoutBeneficiary(id);
+    toast.success("Beneficiary successfully Paid Out!");
+  };
+
   return (
     <>
       <div className="flex flex-col p-8">
         <div className="flex flex-row justify-center items-center" role="group">
-          <button className="btn rounded-full mx-2">ALL</button>
-          <button className="btn rounded-full mx-2 ">Open</button>
-          <button className="btn rounded-full mx-2">Closed</button>
+          <button className="btn rounded-full mx-2" onClick={getAll}>
+            ALL
+          </button>
+          <button className="btn rounded-full mx-2" onClick={getOpened}>
+            Open
+          </button>
+          <button className="btn rounded-full mx-2" onClick={getClosed}>
+            Closed
+          </button>
         </div>
       </div>
       <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

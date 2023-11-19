@@ -1,7 +1,7 @@
 import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
 import { WagmiConfig } from "wagmi";
 import { arbitrum, mainnet } from "viem/chains";
-
+import { IDKitWidget, CredentialType } from "@worldcoin/idkit";
 const projectId = "3b453e195a53706c5119130c34dd761f";
 const metadata = {
   name: "Web3Modal",
@@ -15,6 +15,12 @@ const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 createWeb3Modal({ wagmiConfig, projectId, chains });
 
 const Navbar = () => {
+  const handleProof = (result) => {
+    console.log(result);
+  };
+  const onSuccess = async () => {
+    console.log("hi");
+  };
   return (
     <div>
       <div className="navbar bg-base-100">
@@ -47,9 +53,28 @@ const Navbar = () => {
             <li>
               <a>Item 2</a>
             </li>
-            <li>
-              <a>Item 3</a>
-            </li>
+            <IDKitWidget
+              action="my_action"
+              onSuccess={onSuccess}
+              credential_types={[CredentialType.Orb]}
+              handleVerify={handleProof}
+              app_id="app_staging_66f83164bd5e69e75546612dc02179f7"
+            >
+              {({ open }) => (
+                <button
+                  style={{
+                    marginRight: "30px",
+                    border: "1px solid #000", // Replace #000 with your desired border color
+                    padding: "10px 20px", // Add some padding to make the button look better
+                    borderRadius: "5px", // Optionally, add some border-radius for rounded corners
+                  }}
+                  className="btn btn-primary btn-sm text-black"
+                  onClick={open}
+                >
+                  Connect with world coin
+                </button>
+              )}
+            </IDKitWidget>
           </ul>
           <w3m-button />
         </div>

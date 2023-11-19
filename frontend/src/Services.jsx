@@ -1,29 +1,19 @@
-import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
-import { Link, BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { WagmiConfig } from "wagmi";
-import { arbitrum, mainnet } from "viem/chains";
-import { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
-import Navbar from "./components/Navbar.jsx";
-import Home from "./pages/Home.jsx";
-import Proposal from "./pages/Proposal.jsx";
-import Web3Modal from "web3modal";
+// const createProp = async () => {
+//   if (!contract || !proposalId) return;
+//   try {
+//     const tx = await contract.createProposal(id);
+//     const receipt = await tx.wait();
+//     console.log("Transaction Hash:", receipt.transactionHash);
+//     console.log("Proposal created successfully");
+//   } catch (error) {
+//     console.error("Error creating proposal:", error);
+//   }
+// };
+
 import { ethers } from "ethers";
-
-const projectId = "3b453e195a53706c5119130c34dd761f";
-const metadata = {
-  name: "Web3Modal",
-  description: "Web3Modal Example",
-  url: "https://web3modal.com",
-  icons: ["https://avatars.githubusercontent.com/u/37784886"],
-};
-
-const chains = [mainnet, arbitrum];
-const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
-createWeb3Modal({ wagmiConfig, projectId, chains });
-
-const abi = [
+import { getGlobalState } from "./main/main.jsx";
+const contractAddress = "0xea8f77c350e839d545d309233b9477d27ecd187f";
+const contractAbi = [
   {
     inputs: [],
     name: "AccessControlBadConfirmation",
@@ -745,32 +735,84 @@ const abi = [
   },
 ];
 
-const onSuccess = async (result) => {
-  const web3Modal = new Web3Modal();
-  const connection = await web3Modal.connect();
-  const provider = new ethers.providers.Web3Provider(connection);
-  const signer = await provider.getSigner();
-  const contract = new ethers.Contract(
-    0xea8f77c350e839d545d309233b9477d27ecd187f,
-    abi,
-    signer
-  );
+const voteOnProposal = async (proposalId, supported) => {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractAbi,
+      provider
+    );
+
+    await provider.send("eth_requestAccounts", []);
+
+    const signer = provider.getSigner();
+    const account = await signer.getAddress();
+
+    await contract.performVote(proposalId, supported, { from: account });
+
+    window.location.reload();
+  } catch (error) {
+    reportError(error);
+  }
 };
 
-function App() {
-  return (
-    <>
-      <Router>
-        <WagmiConfig config={wagmiConfig}>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/proposal/:id" element={<Proposal />} />
-          </Routes>
-        </WagmiConfig>
-      </Router>
-    </>
-  );
-}
+const payoutBeneficiary = async (id) => {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-export default App;
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractAbi,
+      provider
+    );
+
+    await provider.send("eth_requestAccounts", []);
+
+    const signer = provider.getSigner();
+    const account = await signer.getAddress();
+
+    await contract.payBeneficiary(id, { from: account });
+
+    window.location.reload();
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+const performContribute = async (amount) => {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const contract = new ethers.Contract(
+      contractAddress,
+      contractAbi,
+      provider
+    );
+
+    await provider.send("eth_requestAccounts", []);
+
+    const signer = provider.getSigner();
+    const account = await signer.getAddress();
+
+    const amountInWei = ethers.utils.parseEther(amount.toString());
+
+    await contract.contribute({ value: amountInWei, from: account });
+
+    window.location.reload();
+  } catch (error) {
+    reportError(error);
+    return error;
+  }
+};
+
+const getProposal = async (id) => {
+  try {
+    const proposals = getGlobalState("proposals");
+    return proposals.find((proposal) => proposal.id == id);
+  } catch (error) {
+    reportError(error);
+  }
+};
+
+export { getProposal, voteOnProposal, payoutBeneficiary, performContribute };
