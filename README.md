@@ -8,4 +8,6 @@ scroll explorer - https://sepolia.scrollscan.dev/tx/0x7259c204438e2bebcc4c561ea5
 
 chiliz explorer - https://spicy-explorer.chiliz.com/tx/0x2cc16edaa3bd6ae6b2472ed678d427444d40efc7b441b9e4097a84d752e12016
 
+arbitrum - https://arbiscan.io/address/0xAA6C32B4C3B869201A3e162F24bBe37BCacB02D9
+
 
